@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact — Inspirational Graffiti</title>
+<title>Contact - Inspirational Graffiti</title>
 
 <style>
 :root {
@@ -13,7 +13,7 @@
   --text-soft: #c7c7d9;
   --purple: #9b59b6;
   --purple-soft: #cfa7e6;
-  --purple-glow: rgba(155, 89, 182, 0.55);
+  --purple-glow: rgba(155, 89, 182, 0.75);
   --radius-lg: 22px;
   --radius-md: 14px;
 }
@@ -36,7 +36,7 @@ body {
 .navbar {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 20;
   backdrop-filter: blur(18px);
   background: rgba(5,5,15,0.85);
   border-bottom: 1px solid rgba(155,89,182,0.4);
@@ -69,20 +69,30 @@ body {
   text-decoration: none;
   cursor: pointer;
   box-shadow: 0 0 12px var(--purple-glow);
+  transition: box-shadow 0.2s ease, background 0.2s ease, transform 0.15s ease;
 }
 
 .nav-btn:hover {
   background: rgba(155,89,182,0.9);
+  box-shadow: 0 0 18px var(--purple-glow);
+  transform: translateY(-1px);
 }
 
-/* LAYOUT */
+/* PAGE WRAP */
 .page-wrap {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   padding: 30px 18px 40px;
+  transition: filter 0.25s ease, opacity 0.25s ease;
 }
 
+.page-wrap.blurred {
+  filter: blur(6px) brightness(0.6);
+  pointer-events: none;
+}
+
+/* CONTACT CARD */
 .contact-card {
   max-width: 520px;
   width: 100%;
@@ -107,7 +117,7 @@ body {
   transform: translateY(0);
 }
 
-/* TITLE */
+/* TITLES */
 .contact-title {
   font-size: 1.7rem;
   font-weight: 800;
@@ -134,6 +144,12 @@ body {
   display: block;
   font-weight: 600;
   color: var(--text-soft);
+}
+
+.input-group label span.sub {
+  font-weight: 500;
+  color: #9a9ab5;
+  font-size: 0.8rem;
 }
 
 .input-group input,
@@ -165,6 +181,7 @@ textarea {
   box-shadow: 0 0 12px rgba(255,111,191,0.7);
 }
 
+/* SHAKE */
 @keyframes shake {
   0% { transform: translateX(0); }
   25% { transform: translateX(-6px); }
@@ -177,7 +194,7 @@ textarea {
   animation: shake 0.3s ease;
 }
 
-/* BUTTON */
+/* BUTTONS */
 .btn {
   width: 100%;
   padding: 14px;
@@ -190,10 +207,37 @@ textarea {
   margin-top: 6px;
   font-size: 1rem;
   box-shadow: 0 0 16px var(--purple-glow);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
 }
 
 .btn:hover {
   background: #8e44ad;
+  box-shadow: 0 0 22px var(--purple-glow);
+  transform: translateY(-1px);
+}
+
+/* RECTANGULAR VERIFY BUTTON */
+.btn-verify {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(155,89,182,0.7);
+  background: rgba(15,15,30,0.95);
+  color: var(--white);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 4px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.7);
+  text-align: center;
+  transition: box-shadow 0.2s ease, background 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+}
+
+.btn-verify:hover {
+  background: rgba(155,89,182,0.18);
+  border-color: rgba(155,89,182,0.95);
+  box-shadow: 0 0 18px var(--purple-glow);
+  transform: translateY(-1px);
 }
 
 /* SUCCESS BOX */
@@ -225,7 +269,7 @@ textarea {
   color: #0b2b18;
   font-size: 1.6rem;
   box-shadow: 0 0 18px rgba(46,204,113,0.8);
-  z-index: 20;
+  z-index: 40;
 }
 
 @keyframes floatUp {
@@ -238,6 +282,95 @@ textarea {
 .checkmark-float.show {
   display: flex;
   animation: floatUp 1.2s ease forwards;
+}
+
+/* MODAL OVERLAY */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(3,3,10,0.65);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+/* POP-UP GROW ANIMATION */
+@keyframes popupGrow {
+  0% {
+    transform: translate(-50%, -50%) scale(0.01);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* MODAL BOX */
+.modal-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: radial-gradient(circle at top, #1b1024, #050509);
+  border-radius: 18px;
+  padding: 18px 16px 16px;
+  max-width: 360px;
+  width: 90%;
+  box-shadow: 0 0 26px var(--purple-glow);
+  border: 1px solid rgba(155,89,182,0.7);
+  transform-origin: center;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.01);
+}
+
+.modal-box.show {
+  animation: popupGrow 0.35s ease-out forwards;
+}
+
+/* MODAL TEXT */
+.modal-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--purple-soft);
+  text-align: center;
+}
+
+.modal-sub {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* CLOSE BUTTON */
+.modal-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(155,89,182,0.7);
+  background: rgba(10,10,20,0.95);
+  color: var(--text-soft);
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.modal-close:hover {
+  background: rgba(155,89,182,0.25);
+  box-shadow: 0 0 10px var(--purple-glow);
+  transform: translateY(-1px);
 }
 </style>
 </head>
@@ -252,7 +385,7 @@ textarea {
   </div>
 </header>
 
-<div class="page-wrap">
+<div class="page-wrap" id="page-wrap">
   <div class="contact-card fade-up">
     <div class="contact-title">Contact Us</div>
     <div class="contact-sub">
@@ -260,7 +393,7 @@ textarea {
     </div>
 
     <div class="input-group">
-      <label>Your Name</label>
+      <label>Your Name <span class="sub">(Please use your real name!)</span></label>
       <input type="text" id="name">
       <div class="error-msg" id="err-name"></div>
     </div>
@@ -271,13 +404,23 @@ textarea {
       <div class="error-msg" id="err-email"></div>
     </div>
 
+    <button class="btn-verify" id="send-code-btn">
+      Send verification code to your email to unlock message box
+    </button>
+
+    <div class="input-group" id="code-group">
+      <label>Verification Code</label>
+      <input type="text" id="code" maxlength="6">
+      <div class="error-msg" id="err-code"></div>
+    </div>
+
     <div class="input-group">
       <label>Your Message</label>
-      <textarea id="message"></textarea>
+      <textarea id="message" disabled></textarea>
       <div class="error-msg" id="err-message"></div>
     </div>
 
-    <button class="btn" id="send-btn">Send Message</button>
+    <button class="btn" id="send-btn" disabled>Send Message</button>
 
     <div class="success-box" id="success-box">
       Message sent successfully. We’ll be in touch.
@@ -287,8 +430,40 @@ textarea {
 
 <div class="checkmark-float" id="checkmark">✓</div>
 
+<!-- IMAGE CAPTCHA MODAL -->
+<div class="modal-overlay" id="modal-image">
+  <div class="modal-box" id="modal-image-box">
+    <button class="modal-close" id="close-image">×</button>
+    <div class="modal-title">Quick check before we start</div>
+    <div class="modal-sub">Please complete this image test so we know you’re human.</div>
+    <div class="h-captcha"
+         data-sitekey="078ecdf0-f0c8-4558-a0b0-e63c8fbec0f8"
+         data-size="normal"
+         data-theme="dark"
+         data-callback="onImageCaptchaSuccess">
+    </div>
+  </div>
+</div>
+
+<!-- HOLD CAPTCHA MODAL -->
+<div class="modal-overlay" id="modal-hold">
+  <div class="modal-box" id="modal-hold-box">
+    <button class="modal-close" id="close-hold">×</button>
+    <div class="modal-title">Verify before we send your code</div>
+    <div class="modal-sub">Press and hold to verify, then we’ll email your 6‑digit code.</div>
+    <div class="h-captcha"
+         data-sitekey="7dcef140-4c4c-422a-977a-45d6da22caa8"
+         data-size="normal"
+         data-theme="dark"
+         data-callback="onHoldCaptchaSuccess">
+    </div>
+  </div>
+</div>
+
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+
 <script>
-// Fade-up
+/* Fade-up */
 const fadeItems = document.querySelectorAll(".fade-up");
 const fadeObserver = new IntersectionObserver(entries => {
   entries.forEach(entry => {
@@ -300,28 +475,201 @@ const fadeObserver = new IntersectionObserver(entries => {
 }, { threshold: 0.2 });
 fadeItems.forEach(el => fadeObserver.observe(el));
 
-// Error helpers
+/* Error helpers */
 function showError(inputId, errorId, message) {
   const input = document.getElementById(inputId);
   const error = document.getElementById(errorId);
 
-  input.classList.add("input-error");
-  error.style.display = "block";
-  error.textContent = message;
+  if (input) input.classList.add("input-error");
+  if (error) {
+    error.style.display = "block";
+    error.textContent = message;
+  }
 
-  input.classList.add("shake");
-  setTimeout(() => input.classList.remove("shake"), 300);
+  if (input) {
+    input.classList.add("shake");
+    setTimeout(() => input.classList.remove("shake"), 300);
+  }
 }
 
 function clearError(inputId, errorId) {
   const input = document.getElementById(inputId);
   const error = document.getElementById(errorId);
 
-  input.classList.remove("input-error");
-  error.style.display = "none";
+  if (input) input.classList.remove("input-error");
+  if (error) error.style.display = "none";
 }
 
-// Submit handler
+const backendBase = "https://inspirational-graffiti-backend-2.onrender.com";
+
+let pageCaptchaPassed = false;
+let holdCaptchaToken = null;
+let emailVerified = false;
+
+/* MODAL HELPERS */
+const pageWrap = document.getElementById("page-wrap");
+const modalImage = document.getElementById("modal-image");
+const modalImageBox = document.getElementById("modal-image-box");
+const modalHold = document.getElementById("modal-hold");
+const modalHoldBox = document.getElementById("modal-hold-box");
+const closeImageBtn = document.getElementById("close-image");
+const closeHoldBtn = document.getElementById("close-hold");
+
+function openModal(modal, box) {
+  modal.classList.add("active");
+  pageWrap.classList.add("blurred");
+  box.classList.remove("show");
+  void box.offsetWidth; // reflow
+  box.classList.add("show");
+}
+
+function closeModal(modal, box) {
+  modal.classList.remove("active");
+  pageWrap.classList.remove("blurred");
+  box.classList.remove("show");
+}
+
+/* PAGE-LOAD IMAGE CAPTCHA */
+window.addEventListener("load", () => {
+  openModal(modalImage, modalImageBox);
+});
+
+closeImageBtn.addEventListener("click", () => {
+  closeModal(modalImage, modalImageBox);
+});
+
+/* Called by hCaptcha when image captcha succeeds */
+window.onImageCaptchaSuccess = function(token) {
+  if (!token) return;
+  pageCaptchaPassed = true;
+  setTimeout(() => {
+    closeModal(modalImage, modalImageBox);
+  }, 250);
+};
+
+/* HOLD CAPTCHA */
+closeHoldBtn.addEventListener("click", () => {
+  closeModal(modalHold, modalHoldBox);
+  holdCaptchaToken = null;
+});
+
+/* Called by hCaptcha when hold captcha succeeds */
+window.onHoldCaptchaSuccess = function(token) {
+  if (!token) return;
+  holdCaptchaToken = token;
+  setTimeout(() => {
+    closeModal(modalHold, modalHoldBox);
+    actuallySendVerificationCode();
+  }, 250);
+};
+
+/* SEND VERIFICATION CODE FLOW */
+document.getElementById("send-code-btn").onclick = () => {
+  const email = document.getElementById("email").value.trim();
+  clearError("email", "err-email");
+  clearError("code", "err-code");
+
+  if (!pageCaptchaPassed) {
+    showError("email", "err-email", "Please complete the first check before verifying your email.");
+    return;
+  }
+
+  if (!email) {
+    showError("email", "err-email", "Email is required before sending a code.");
+    return;
+  }
+
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailPattern.test(email)) {
+    showError("email", "err-email", "Please enter a valid email address.");
+    return;
+  }
+
+  holdCaptchaToken = null;
+  openModal(modalHold, modalHoldBox);
+};
+
+async function actuallySendVerificationCode() {
+  const email = document.getElementById("email").value.trim();
+
+  if (!holdCaptchaToken) {
+    showError("email", "err-email", "Verification was not completed. Please try again.");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${backendBase}/send-code`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, hcaptchaToken: holdCaptchaToken })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      showError("email", "err-email", data.error || "Could not send code. Please try again.");
+      return;
+    }
+
+    const successBox = document.getElementById("success-box");
+    successBox.style.display = "block";
+    successBox.textContent = "Verification code sent. Check your email and enter the 6-digit code.";
+  } catch (err) {
+    showError("email", "err-email", "Unable to reach server. Please try again later.");
+  } finally {
+    holdCaptchaToken = null;
+  }
+}
+
+/* VERIFY CODE */
+document.getElementById("code").addEventListener("input", () => {
+  clearError("code", "err-code");
+});
+
+document.getElementById("code").addEventListener("blur", () => {
+  const code = document.getElementById("code").value.trim();
+  if (code && code.length !== 6) {
+    showError("code", "err-code", "Code should be 6 digits.");
+  }
+});
+
+document.getElementById("code").addEventListener("change", async () => {
+  const email = document.getElementById("email").value.trim();
+  const code = document.getElementById("code").value.trim();
+
+  clearError("code", "err-code");
+
+  if (!code || code.length !== 6) return;
+
+  try {
+    const res = await fetch(`${backendBase}/verify-code`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, code })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      showError("code", "err-code", data.error || "Invalid or expired code.");
+      return;
+    }
+
+    emailVerified = true;
+    document.getElementById("email").setAttribute("disabled", "true");
+    document.getElementById("code").setAttribute("disabled", "true");
+    document.getElementById("message").removeAttribute("disabled");
+    document.getElementById("send-btn").removeAttribute("disabled");
+
+    const successBox = document.getElementById("success-box");
+    successBox.style.display = "block";
+    successBox.textContent = "Email verified. You can now send your message.";
+  } catch (err) {
+    showError("code", "err-code", "Unable to verify code. Please try again.");
+  }
+});
+
+/* SEND MESSAGE */
 document.getElementById("send-btn").onclick = async () => {
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
@@ -338,14 +686,8 @@ document.getElementById("send-btn").onclick = async () => {
     valid = false;
   }
 
-  const allowedEndings = [".com", ".co.uk", ".org", ".net"];
-  const validEnding = allowedEndings.some(end => email.endsWith(end));
-
-  if (!email) {
-    showError("email", "err-email", "Email is required.");
-    valid = false;
-  } else if (!email.includes("@") || !validEnding) {
-    showError("email", "err-email", "Email must end in .com, .co.uk, .org, or .net");
+  if (!emailVerified) {
+    showError("email", "err-email", "Please verify your email before sending.");
     valid = false;
   }
 
@@ -356,10 +698,8 @@ document.getElementById("send-btn").onclick = async () => {
 
   if (!valid) return;
 
-  // Send to backend
   try {
-    const res = await fetch("https://inspirational-graffiti-backend-2.onrender.com/send-email", {
-
+    const res = await fetch(`${backendBase}/send-email`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, message })
@@ -370,7 +710,9 @@ document.getElementById("send-btn").onclick = async () => {
       return;
     }
 
-    document.getElementById("success-box").style.display = "block";
+    const successBox = document.getElementById("success-box");
+    successBox.style.display = "block";
+    successBox.textContent = "Message sent successfully. We’ll be in touch.";
 
     const check = document.getElementById("checkmark");
     check.classList.add("show");
@@ -379,7 +721,6 @@ document.getElementById("send-btn").onclick = async () => {
     }, 1300);
 
     document.getElementById("name").value = "";
-    document.getElementById("email").value = "";
     document.getElementById("message").value = "";
   } catch (err) {
     showError("message", "err-message", "Unable to reach server. Please try again later.");
@@ -389,4 +730,3 @@ document.getElementById("send-btn").onclick = async () => {
 
 </body>
 </html>
-
