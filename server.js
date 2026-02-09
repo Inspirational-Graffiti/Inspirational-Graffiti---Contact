@@ -1,4 +1,3 @@
-// server.js
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
@@ -12,24 +11,14 @@ app.get("/", (req, res) => {
   res.status(200).send("Inspirational Graffiti backend is running.");
 });
 
-
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// In-memory store for verification codes
-// { [email]: { code: "123456", expiresAt: 1234567890 } }
 const verificationCodes = {};
 
-// Helper: generate 6-digit code
 function generateCode() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-// Health route (for Render + quick checks)
-app.get("/", (req, res) => {
-  res.status(200).send("Inspirational Graffiti contact backend is running.");
-});
-
-// POST /send-code
 app.post("/send-code", async (req, res) => {
   const { email, hcaptchaToken } = req.body;
 
@@ -37,7 +26,6 @@ app.post("/send-code", async (req, res) => {
     return res.status(400).json({ error: "Missing email or captcha token" });
   }
 
-  // Verify hCaptcha
   try {
     const captchaRes = await axios.post(
       "https://hcaptcha.com/siteverify",
@@ -58,9 +46,8 @@ app.post("/send-code", async (req, res) => {
     return res.status(500).json({ error: "Captcha verification error" });
   }
 
-  // Generate and store code
   const code = generateCode();
-  const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+  const expiresAt = Date.now() + 10 * 60 * 1000;
   verificationCodes[email] = { code, expiresAt };
 
   try {
@@ -83,7 +70,6 @@ app.post("/send-code", async (req, res) => {
   }
 });
 
-// POST /verify-code
 app.post("/verify-code", (req, res) => {
   const { email, code } = req.body;
 
@@ -106,12 +92,10 @@ app.post("/verify-code", (req, res) => {
     return res.status(400).json({ error: "Incorrect code" });
   }
 
-  // Verified successfully
   delete verificationCodes[email];
   return res.status(200).json({ success: true });
 });
 
-// POST /send-email
 app.post("/send-email", async (req, res) => {
   const { name, email, message } = req.body;
 
