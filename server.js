@@ -8,6 +8,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.status(200).send("Inspirational Graffiti backend is running.");
+});
+
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 // In-memory store for verification codes
